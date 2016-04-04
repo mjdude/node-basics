@@ -1,5 +1,44 @@
 console.log('starting password manager');
 
+var argv = require('yargs')
+  .command('create' , 'Creates an account with name, username and password', function(yargs){
+    yargs.options({
+      name: {
+        description: 'name of account',
+        alias: 'n',
+        demand: true,
+        type: 'string',
+      },
+      username: {
+        description: 'username of account',
+        alias: 'u',
+        demand: true,
+        type: 'string',
+      },
+      password: {
+        description: 'password of account',
+        alias: 'p',
+        demand: true,
+        type: 'string',
+      },
+    }).help('help');
+  })
+  .command('get', 'Gets account infromation from name', function(yargs){
+    yargs.options({
+      name: {
+        description: 'name of account',
+        alias: 'n',
+        demand: true,
+        type: 'string',
+      }
+    }).help('help');
+  })
+  .help('help')
+  .argv;
+
+console.log(argv);
+var command = argv._[0];
+
 var storage = require('node-persist');
 storage.initSync();
 
@@ -8,7 +47,7 @@ function createAccount(account){
     var accounts = storage.getItemSync('accounts');
     if(typeof accounts === 'undefined'){
       accounts = [];
-    };
+    }
     accounts.push(account);
     storage.setItemSync('accounts', accounts);
     return account;
@@ -33,12 +72,21 @@ function getAccount(accountName){
   return mactchAccount;
 }
 
-// test functions
+if (command === 'create') {
+	var createdAccount = createAccount({
+		name: argv.name,
+		username: argv.username,
+		password: argv.password
+	});
+	console.log('Account created!');
+	console.log(createdAccount);
+} else if (command === 'get') {
+	var fetchedAccount = getAccount(argv.name);
 
-// console.log(createAccount({
-//   name: 'facebook',
-//   username: 'mo',
-//   password: 'password',
-// }));
-
-console.log(getAccount('facebook'));
+	if (typeof fetchedAccount === 'undefined') {
+		console.log('Account not found');
+	} else {
+		console.log('Account found!');
+		console.log(fetchedAccount);
+	}
+}
