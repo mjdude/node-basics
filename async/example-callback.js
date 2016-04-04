@@ -14,5 +14,3 @@ request({
         console.log('it\' ' + body.main.temp + ' in ' + body.name );
     }
 });
-
-console.log(url);
