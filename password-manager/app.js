@@ -55,9 +55,14 @@ var command = argv._[0];
 var crypto = require('crypto-js');
 
 function getAccounts(masterPassword){
-  var encryptedAccounts = storage.getItemSync('encryptedAccounts');
-  var accountsBytes = crypto.AES.decrypt(encryptedAccounts, masterPassword);
-  var accounts = JSON.parse(accountsBytes.toString.Utf8);
+
+  var encryptedAccounts = storage.getItemSync('accounts');
+  var accounts = [];
+  if( typeof encryptedAccounts !== 'undefined' ){
+    var bytes = crypto.AES.decrypt(encryptedAccounts, masterPassword);
+    accounts = JSON.parse(bytes.toString(crypto.enc.Utf8));
+  }
+
 
   return accounts;
 
@@ -67,7 +72,7 @@ function getAccounts(masterPassword){
 function saveAccounts (accounts, masterPassword){
 
     var encryptedAccounts = crypto.AES.encrypt(JSON.stringify(accounts), masterPassword);
-    storage.setItemSync('encryptedAccounts',encryptedAccounts);
+    storage.setItemSync('accounts',encryptedAccounts.toString());
     return accounts;
 }
 
@@ -75,9 +80,6 @@ function saveAccounts (accounts, masterPassword){
 function createAccount (account, masterPassword) {
 
   var accounts = getAccounts(masterPassword);
-  if (typeof accounts === 'undefined') {
-		accounts = [];
-	}
 
 	accounts.push(account);
 
@@ -109,7 +111,7 @@ if (command === 'create') {
 	console.log('Account created!');
 	console.log(createdAccount);
 } else if (command === 'get') {
-	var fetchedAccount = getAccount(argv.name, masterPassword);
+	var fetchedAccount = getAccount(argv.name, argv.masterPassword);
 
 	if (typeof fetchedAccount === 'undefined') {
 		console.log('Account not found');
