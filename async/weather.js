@@ -1,18 +1,23 @@
 var apiKey = '6e8af89cc20c29c98b98aea3d431b910';
-
 var request = require('request');
 
-module.exports = function(location, callback){
-  var url = 'http://api.openweathermap.org/data/2.5/weather?q=' + location + '&units=metric&APPID=6e8af89cc20c29c98b98aea3d431b910';
-  request({
-        url: url ,
-        json: true,
-      }, function(error, response, body){
-        if (error) {
-          callback('unable to fetch weather');
-        }
-        else {
-          callback( 'it\' ' + body.main.temp + ' in ' + body.name);
-        }
-    });
+
+module.exports = function (location, callback) {
+	var encodedLocation = encodeURIComponent(location);
+	var url = 'http://api.openweathermap.org/data/2.5/weather?q=' + encodedLocation + '&units=metric&APPID=6e8af89cc20c29c98b98aea3d431b910';
+
+	if (!location) {
+		return callback('No location provided');
+	}
+
+	request({
+		url: url,
+		json: true
+	}, function (error, response, body) {
+		if (error) {
+			callback('Unable to fetch weather.');
+		} else {
+			callback('It\'s ' + body.main.temp + ' in ' + body.name + '!');
+		}
+	});
 };
