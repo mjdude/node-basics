@@ -1,8 +1,9 @@
 var apiKey = '6e8af89cc20c29c98b98aea3d431b910';
-var url = 'http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&APPID=6e8af89cc20c29c98b98aea3d431b910';
+
 var request = require('request');
 
-module.exports = function(callback){
+module.exports = function(location, callback){
+  var url = 'http://api.openweathermap.org/data/2.5/weather?q=' + location + '&units=metric&APPID=6e8af89cc20c29c98b98aea3d431b910';
   request({
         url: url ,
         json: true,

@@ -6,7 +6,7 @@ var argv = require('yargs')
       location: {
         alias: 'l',
         description: 'location of user',
-        demand: true,
+        demand: false,
         type: 'string'
       }
     }).help('help');
@@ -16,21 +16,27 @@ var argv = require('yargs')
 
 var command = argv._[0];
 
-weather(function(currentWeather){
-  console.log(currentWeather);
-});
+// location(function(location){
+//   if (!location) {
+//     console.log('unable to guess location');
+//   }
+//   else {
+//     console.log('city: ' + location.city );
+//     console.log('long/lat: ' + location.loc );
+//   }
 
-location(function(location){
-  if (!location) {
-    console.log('unable to guess location');
-  }
-  else {
-    console.log('city: ' + location.city );
-    console.log('long/lat: ' + location.loc );
-  }
-
-});
+// });
 
 if (command === 'location') {
   console.log('location entered: ' + argv.location);
+  weather(argv.location ,function(currentWeather){
+    console.log(currentWeather);
+  });
+}
+else {
+  location(function(location){
+    weather(location.city ,function(currentWeather){
+      console.log(currentWeather);
+    });
+  });
 }
