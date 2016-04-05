@@ -7,6 +7,12 @@ weather(function(currentWeather){
 });
 
 location(function(location){
-  console.log('city: ' + location.city );
-  console.log('long/lat: ' + location.loc );
+  if (!location) {
+    console.log('unable to guess location');
+  }
+  else {
+    console.log('city: ' + location.city );
+    console.log('long/lat: ' + location.loc );
+  }
+
 });
