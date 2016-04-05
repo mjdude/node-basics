@@ -33,6 +33,6 @@ function getWeather(location){
 
 getLocation().then(function(location){
   return getWeather(location);
-}).then(function(message){
-  console.log(message);
+}).then(function(currentWeather){
+  console.log(currentWeather);
 });
